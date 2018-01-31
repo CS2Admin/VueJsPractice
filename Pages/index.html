@@ -6,19 +6,55 @@
     </head>
     <body>
         <div id="app">
-            <!--This is where you build your application-->
+            <div v-if="appIndex == 'list'">
+                <ol>
+                    <employee v-for="employee in employees" v-bind:name="employee.name"></employee>
+                </ol>
+                <input v-model="input" />
+                <button v-on:click="createEmployee">Add Employee</button>
+                <p v-if="error">Invalid Name for Employee</p>
+            </div>
+            <div v-if="appIndex == 'details'">
+
+            </div>
         </div>
     </body>
 </html>
 <script src="https://unpkg.com/vue"></script>
 <script>
+    Vue.component('employee', {
+        props: ['name'],
+        template: '<li>{{name}}</li>'
+    })
+
+    function Employee(name) {
+        this.name = name;
+    }
+
     var app = new Vue({
         el: '#app',
         data: {
-            //Enter in data fields that is used in the application here
+            employees: [
+                new Employee("Daniel"),
+                new Employee("Pranav")
+            ],
+            input: "",
+            error: false,
+            appIndex: "list"
         },
         methods: {
-            //Enter any methods used in the application here
+            switchView: function (view) {
+                this.appIndex = view;
+            },
+            createEmployee: function () {
+                if (this.input != "") {
+                    this.error = false;
+                    this.employees.push(new Employee(this.input));
+                    this.input = "";
+                } else {
+                    this.error = true;
+                }
+            }
         }
     })
 </script>
