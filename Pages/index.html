@@ -8,14 +8,19 @@
         <div id="app">
             <div v-if="appIndex == 'list'">
                 <ol>
-                    <employee v-for="employee in employees" v-bind:name="employee.name"></employee>
+                    <employee v-for="employee in employees" v-bind:name="employee.name" :key="employee.id"></employee>
                 </ol>
                 <input v-model="input" />
                 <button v-on:click="createEmployee">Add Employee</button>
                 <p v-if="error">Invalid Name for Employee</p>
             </div>
             <div v-if="appIndex == 'details'">
+                <div>
+                    Employee Details
+                </div>
+                <div v-model="employees[this.detailId].name">
 
+                </div>
             </div>
         </div>
     </body>
@@ -27,7 +32,8 @@
         template: '<li>{{name}}</li>'
     })
 
-    function Employee(name) {
+    function Employee(id, name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -35,12 +41,13 @@
         el: '#app',
         data: {
             employees: [
-                new Employee("Daniel"),
-                new Employee("Pranav")
+                new Employee(0,"Daniel"),
+                new Employee(1,"Pranav")
             ],
             input: "",
             error: false,
-            appIndex: "list"
+            appIndex: "list",
+            detailId: 0
         },
         methods: {
             switchView: function (view) {
@@ -49,7 +56,7 @@
             createEmployee: function () {
                 if (this.input != "") {
                     this.error = false;
-                    this.employees.push(new Employee(this.input));
+                    this.employees.push(new Employee(this.employees.length,this.input));
                     this.input = "";
                 } else {
                     this.error = true;
