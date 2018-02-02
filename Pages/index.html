@@ -8,7 +8,7 @@
         <div id="app">
             <div v-if="appIndex == 'list'">
                 <ol>
-                    <employee v-for="employee in employees" v-on:click="switchView('details')" v-bind:name="employee.name" :key="employee.id"></employee>
+                    <employee v-for="employee in employees" v-on:click.native="switchView('details',employee.id)" v-bind:name="employee.name" :key="employee.id"></employee>
                 </ol>
                 <input v-model="input" />
                 <button v-on:click="createEmployee">Add Employee</button>
@@ -16,7 +16,13 @@
             </div>
             <div v-if="appIndex == 'details'">
                 <div>
+                    <button v-on:click="goToMain">Back</button>
+                </div>
+                <div>
                     Employee Details
+                </div>
+                <div>
+                    Name: {{employees[employeeId].name}}
                 </div>
             </div>
         </div>
@@ -26,7 +32,7 @@
 <script>
     Vue.component('employee', {
         props: ['name'],
-        template: "<li v-on:click='switchView('details')'>{{name}}</li>"
+        template: "<li><button>{{name}}</button></li>"
     })
 
     function Employee(id, name) {
@@ -44,11 +50,12 @@
             input: "",
             error: false,
             appIndex: "list",
-            detailId: 0
+            employeeId: 0
         },
         methods: {
-            switchView: function (view) {
+            switchView: function (view,id) {
                 this.appIndex = view;
+                this.employeeId = id;
             },
             createEmployee: function () {
                 if (this.input != "") {
@@ -58,6 +65,9 @@
                 } else {
                     this.error = true;
                 }
+            },
+            goToMain() {
+                this.appIndex = "list";
             }
         }
     })
